@@ -15,33 +15,23 @@ import Image from 'next/image';
 
 const smoothScroll = keyframes`
   0% {
-    transform: translateX(50%);
     opacity: 0;
   }
-  60% {
-    transform: translateX(0%);
+  50% {
     opacity: 1;
-  }
-  80% {
-    transform: translateX(-50%);
-    opacity: 1;
-  }
-  85% {
-    transform: translateX(-100%);
-    opacity: 0;
   }
   100% {
-    transform: translateX(-100%);
     opacity: 0;
   }
 `;
 
 const AnimatedSpan = styled.span`
   display: inline-block;
-  width: 100%;
   position: absolute;
+  left: 0;
+  width: 100%;
+  text-align: center;
   animation: ${smoothScroll} 8000ms cubic-bezier(0.4, 0, 0.2, 1) infinite;
-
   &:nth-child(2) {
     animation-delay: 4000ms;
   }
@@ -112,38 +102,40 @@ export default function AuthView({ category, handler }: Props) {
           <DialogTitle>
             <Logo suffix={` ${categoryTexts[category]}`} />
           </DialogTitle>
-          <DialogDescription className="pt-3 relative h-8 overflow-hidden">
+        </DialogHeader>
+        <div>
+          <div className="relative h-6 mb-4">
             <AnimatedSpan>👔 企業の方は採用がより楽に</AnimatedSpan>
             <AnimatedSpan className="opacity-0">
               📚 学生の方は就活がより楽しく
             </AnimatedSpan>
-          </DialogDescription>
-        </DialogHeader>
-        {/* <div></div> */}
-        <div className="mt-3 grid gap-4 grid-rows-2">
-          {OAUTH_PROVIDER.map(
-            ({ id, name, color, image: { src, size, style } }) => (
-              <AuthButton
-                key={id}
-                id={id}
-                className={`${color} cursor-pointer drop-shadow-lg`}
-                onClick={handler}
-              >
-                <div className="m-auto flex align-center -mt-1">
-                  <Image
-                    src={src}
-                    alt={name}
-                    width={size}
-                    height={size}
-                    className={style}
-                  />
-                  <div className="ml-3 font-bold">
-                    {categoryTexts[category]} with {name}
-                  </div>
+          </div>
+          <div className="grid gap-4">
+            {OAUTH_PROVIDER.map(
+              ({ id, name, color, image: { src, size, style } }) => (
+                <div key={id}>
+                  <AuthButton
+                    id={id}
+                    className={`${color} cursor-pointer drop-shadow-lg`}
+                    onClick={handler}
+                  >
+                    <div className="m-auto flex align-center -mt-1">
+                      <Image
+                        src={src}
+                        alt={name}
+                        width={size}
+                        height={size}
+                        className={style}
+                      />
+                      <div className="ml-3 font-bold">
+                        {categoryTexts[category]} with {name}
+                      </div>
+                    </div>
+                  </AuthButton>
                 </div>
-              </AuthButton>
-            ),
-          )}
+              ),
+            )}
+          </div>
         </div>
       </DialogContent>
     </Dialog>
