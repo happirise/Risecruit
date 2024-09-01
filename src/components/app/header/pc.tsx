@@ -1,7 +1,5 @@
 import Logo from '@/shared/Logo';
-import { Session } from 'next-auth';
-import { signOut } from 'next-auth/react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { signIn, signOut } from 'next-auth/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,46 +8,45 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import SignIn from './signin';
-import SignUp from './signup';
+import { Button } from '@/components/ui/button';
+import { HamburgerMenuIcon } from '@radix-ui/react-icons';
 
 type Props = Readonly<{
-  session: Session | null;
+  loginState: boolean;
+  name: string;
+  deleteUserInfo: () => void;
 }>;
 
-export default function PcNavBar({ session }: Props) {
-  const user = session?.user;
-
+export default function PcNavBar({ loginState, name, deleteUserInfo }: Props) {
   return (
     <nav className="w-screen bg-white fixed top-0 px-8 hidden md:block">
       <div className="h-14 max-w-[75rem] m-auto flex items-center justify-between">
         <Logo />
-        {session ? (
+        {loginState ? (
           <div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild className="cursor-pointer">
-                <Avatar>
-                  <AvatarImage src={user?.image || ''} />
-                  <AvatarFallback>CN</AvatarFallback>
-                </Avatar>
+                <HamburgerMenuIcon width={24} height={24} />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuLabel>{user?.name}</DropdownMenuLabel>
+                <DropdownMenuLabel>{name}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Profile</DropdownMenuItem>
                 <DropdownMenuItem>Billing</DropdownMenuItem>
                 <DropdownMenuItem>Subscription</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => signOut()}>
+                <DropdownMenuItem
+                  onClick={() => {
+                    deleteUserInfo();
+                    signOut();
+                  }}
+                >
                   Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         ) : (
-          <div className="grid gap-3 grid-cols-2">
-            <SignIn session={session} />
-            <SignUp session={session} />
-          </div>
+          <Button onClick={() => signIn()}>Sign In</Button>
         )}
       </div>
     </nav>
