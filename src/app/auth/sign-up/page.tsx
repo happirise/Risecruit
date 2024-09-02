@@ -1,6 +1,6 @@
 'use client';
 
-import { Label } from '@radix-ui/react-label';
+import { Label } from '@/components/ui/label';
 import { signIn, useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { Transition } from '@headlessui/react';
